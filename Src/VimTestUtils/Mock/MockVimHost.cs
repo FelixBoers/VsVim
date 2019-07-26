@@ -39,8 +39,7 @@ namespace Vim.UnitTest.Mock
         public Func<ITextView, bool> ReloadFunc { get; set; }
         public bool IsCompletionWindowActive { get; set; }
         public int DismissCompletionWindowCount { get; set; }
-        public VirtualSnapshotPoint NavigateToData { get; set; }
-        public bool NavigateToReturn { get; set; }
+        public Func<VirtualSnapshotPoint, bool> NavigateToFunc { get; set; }
         public ITextView FocusedTextView { get; set; }
         public FSharpList<IVimBuffer> Buffers { get; set; }
         public bool? IsTextViewVisible { get; set; }
@@ -113,7 +112,7 @@ namespace Vim.UnitTest.Mock
             LoadFileIntoExistingWindowFunc = delegate { throw new NotImplementedException(); };
             LoadIntoNewWindowFunc = delegate { throw new NotImplementedException(); };
             NavigateToListItemFunc = delegate { throw new NotImplementedException(); };
-            NavigateToReturn = false;
+            NavigateToFunc = delegate { throw new NotImplementedException(); };
             OpenListWindowFunc = delegate { throw new NotImplementedException(); };
             QuitFunc = delegate { throw new NotImplementedException(); };
             ReloadFunc = delegate { return true; };
@@ -149,8 +148,7 @@ namespace Vim.UnitTest.Mock
 
         bool IVimHost.NavigateTo(VirtualSnapshotPoint point)
         {
-            NavigateToData = point;
-            return NavigateToReturn;
+            return NavigateToFunc(point);
         }
 
         string IVimHost.GetName(ITextBuffer textBuffer)
